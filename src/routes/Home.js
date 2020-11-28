@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import Nweet from "../components/Nweet";
 import { dbService } from "../fbase";
 
 const Home = ({userObj}) =>  {
@@ -6,7 +7,7 @@ const Home = ({userObj}) =>  {
     const [nweets, setNweets] = useState([]);
 
     useEffect(() => {
-        //데이터베이스에서 어떤 일이 일어남
+        //데이터베이스에서 어떤 일이 일어나면 onsnapshot이 받음
         dbService.collection("nweets").onSnapshot(snapshot => {
             const nweetArray = snapshot.docs.map(doc => ({
                 id: doc.id, 
@@ -38,9 +39,10 @@ const Home = ({userObj}) =>  {
             </form>
             <div>
                 {nweets.map((nweet) => (
-                <div key={nweet.id}>
-                    <h4>{nweet.text}</h4>
-                </div>
+                    <Nweet 
+                    key={nweet.id} 
+                    nweetObj={nweet} 
+                    isOwner={nweet.creatorId === userObj.uid}/>
                 ))}
             </div>
         </div>
